@@ -1,6 +1,7 @@
 from utils import get_coordinate
 from grid import Grid
 from robot import Robot
+from direction import Direction
 
 def main():
     grid=Grid()
@@ -18,11 +19,12 @@ def main():
     while True:
         direction=input("Give direction of robot: ")
         if direction.isalpha() and direction.capitalize() in ["North","South","West","East"]:
-            direction=direction.capitalize()
+            direction=direction.upper()
             break
         else:
             print("Please give valid direction")
 
+    direction=Direction[direction]
     robot=Robot(x,y,direction,grid)
     while True:
         cmd=input("Give a command: ")

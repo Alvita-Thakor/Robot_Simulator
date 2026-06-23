@@ -1,3 +1,5 @@
+from direction import Direction
+
 class Robot():
     def __init__(self,x,y,direction,grid):
         self.x=x
@@ -6,48 +8,19 @@ class Robot():
         self.grid=grid
     
     def move(self):
-        direction=self.direction
-        match(direction):
-            case "North":
-                new_x=self.x
-                new_y=self.y+1
-            case "South":
-                    new_x=self.x
-                    new_y=self.y-1
-            case "West":
-                    new_x=self.x-1
-                    new_y=self.y
-            case "East":
-                    new_x=self.x+1
-                    new_y=self.y
+        new_x= self.x + self.direction.dx
+        new_y= self.y + self.direction.dy
         if self.grid.position_valid(new_x,new_y):
             self.x=new_x
             self.y=new_y
         else:
             print("Robot cannot move here")
-    
+
     def left(self):
-        match(self.direction):
-            case "North":
-                self.direction="West"
-            case "South":
-                self.direction="East"
-            case "West":
-                self.direction="South"
-            case "East":
-                self.direction="North"
-    
+        self.direction=self.direction.turn(-1)
+
     def right(self):
-        direction=self.direction
-        match(direction):
-            case "North":
-                self.direction="East"
-            case "South":
-                self.direction="West"
-            case "West":
-                self.direction="North"
-            case "East":
-                self.direction="South"
+        self.direction=self.direction.turn(1)
     
     def report(self):
         print(f"robot is at ({self.x},{self.y}) facing {self.direction}")
