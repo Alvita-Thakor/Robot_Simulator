@@ -25,12 +25,26 @@ def command_process(cmd,robot):
 
 def main():
     grid=Grid()
-    obs=get_coordinate("Give number of obstacles: ",0,100)
-    if obs>0:
-        grid.create_obstacles(obs)
+    o_mode=input("name of obstacle file name else for manual leave blank: ")
+    if o_mode=="":
+        obs=get_coordinate("Give number of obstacles: ",0,100)
+        if obs>0:
+            grid.create_obstacles(obs)
+
+    else:
+        while True:
+            try:
+                with open("data/" + o_mode,"r") as file:
+                    grid.load_obstacles(file)
+                    
+            except FileNotFoundError:
+                o_mode=input("please give valid file name: ")
+
+            break
+
     print("There are four commands to make the robot move:\n MOVE,REPORT,LEFT,RIGHT \n The gridis 100x100 ")
 
-    while True:
+    while True: 
         x=get_coordinate("Give x coordinate of robot: ",grid.min_x,grid.max_x)
         y=get_coordinate("Give y coordinate of robot: ",grid.min_y,grid.max_y)
         if grid.position_valid(x,y):

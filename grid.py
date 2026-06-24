@@ -25,9 +25,12 @@ class Grid():
     def display(self,robot):
         dash="-"*((self.max_x+1)*2 +1)
         width =len(str(self.max_y))
+
         print(" "*(width+2) + "+" + dash + "+")
+
         for row in range(self.max_y,self.min_y-1,-1):
             drow=f" {row:{width}} |"
+
             for column in range(self.min_x,self.max_x+1,1):
                 if (column,row) in self.obstacles:
                     drow+=" ■"
@@ -35,11 +38,25 @@ class Grid():
                     drow+=f" {robot.direction.symbol}"
                 else:
                     drow+=" ."
+
             drow+=" |"
             print(drow)
+
         dash="-"*((self.max_x+1)*2 +1)
         print(" "*(width+2) + "+" + dash + "+")
         drow="  "
+
         for column in range(self.min_x,self.max_x+1,1):
             drow=drow+ f" {column}"
         print(drow)
+
+    def load_obstacles(self,file):
+        for obs in file:
+            try:
+                x,y=obs.split(",")
+                x=int(x)
+                y=int(y)
+                if self.position_valid(x,y):
+                    self.obstacles.add((x,y))
+            except ValueError:
+                print("Invalid obstacle")
