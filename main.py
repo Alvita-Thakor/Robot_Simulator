@@ -5,8 +5,9 @@ from direction import Direction
 
 def main():
     grid=Grid()
-    obs=get_coordinate("Give number of obstacles: ",1,100)
-    grid.create_obstacles(obs)
+    obs=get_coordinate("Give number of obstacles: ",0,100)
+    if obs>0:
+        grid.create_obstacles(obs)
     print("There are four commands to make the robot move:\n MOVE,REPORT,LEFT,RIGHT \n The gridis 100x100 ")
 
     while True:

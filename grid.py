@@ -1,7 +1,7 @@
 from utils import get_coordinate
 
 class Grid():
-    def __init__(self,max_x=5,max_y=5,min_x=0,min_y=0):
+    def __init__(self,max_x=10,max_y=10,min_x=0,min_y=0):
         self.max_x=max_x
         self.max_y=max_y
         self.min_x=min_x
@@ -23,13 +23,23 @@ class Grid():
             self.obstacles.add((x,y))
 
     def display(self,robot):
+        dash="-"*((self.max_x+1)*2 +1)
+        width =len(str(self.max_y))
+        print(" "*(width+2) + "+" + dash + "+")
         for row in range(self.max_y,self.min_y-1,-1):
-            drow=""
+            drow=f" {row:{width}} |"
             for column in range(self.min_x,self.max_x+1,1):
                 if (column,row) in self.obstacles:
-                    drow=drow+"X"
+                    drow+=" ■"
                 elif column==robot.x and row==robot.y:
-                    drow=drow+"R"
+                    drow+=f" {robot.direction.symbol}"
                 else:
-                    drow=drow+"."
+                    drow+=" ."
+            drow+=" |"
             print(drow)
+        dash="-"*((self.max_x+1)*2 +1)
+        print(" "*(width+2) + "+" + dash + "+")
+        drow="  "
+        for column in range(self.min_x,self.max_x+1,1):
+            drow=drow+ f" {column}"
+        print(drow)
