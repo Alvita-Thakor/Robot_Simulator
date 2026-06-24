@@ -3,6 +3,26 @@ from grid import Grid
 from robot import Robot
 from direction import Direction
 
+def command_process(cmd,robot):
+    match(cmd):
+            case "MOVE":
+                robot.move()
+                return True
+            case "LEFT":
+                robot.left()
+                return True
+            case "RIGHT":
+                robot.right()
+                return True
+            case "REPORT":
+                robot.report()
+                return True
+            case "EXIT":
+                return False
+            case _:
+                print(f"Invalid command {cmd}")
+                return True
+
 def main():
     grid=Grid()
     obs=get_coordinate("Give number of obstacles: ",0,100)
@@ -27,23 +47,30 @@ def main():
 
     direction=Direction[direction]
     robot=Robot(x,y,direction,grid)
-    while True:
-        cmd=input("Give a command: ")
-        cmd=cmd.upper().strip()
-        match(cmd):
-            case "MOVE":
-                robot.move()
-            case "LEFT":
-                robot.left()
-            case "RIGHT":
-                robot.right()
-            case "REPORT":
-                robot.report()
-            case "EXIT":
+    
+    mode=input("Give file name for file mode else leave blank: ")
+    if mode=="":
+        while True:
+            cmd=input("Give a command: ")
+            cmd=cmd.upper().strip()
+            if not command_process(cmd,robot):
                 break
-            case _:
-                print("Invalid command")
-        grid.display(robot)
+            grid.display(robot)
+
+    else:
+        while True:
+            try:
+                with open("data/" + mode,"r") as file:
+                    for cmd in file:
+                        cmd=cmd.upper().strip()
+                        if not command_process(cmd,robot):
+                            break
+                        grid.display(robot)
+                    
+            except FileNotFoundError:
+                mode=input("please give valid file name: ")
+
+            break
 
 if __name__=="__main__":
     main()
