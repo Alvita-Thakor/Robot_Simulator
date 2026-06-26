@@ -1,5 +1,6 @@
 import os
-import subprocess
+
+os.system("")
 
 def get_coordinate(st,min_c,max_c):
     while True:
@@ -13,4 +14,4 @@ def get_coordinate(st,min_c,max_c):
         print("Coordinates should be numeric")
 
 def clear_screen():
-    subprocess.run("cls" if os.name == "nt" else "clear",shell=True,check=False)
+    print("\033[H\033[J", end="")

@@ -64,9 +64,15 @@ def main():
     
     mode=input("Give file name for file mode else leave blank: ")
     cmd_history=[]
+    clear_screen()
+    grid.display(robot, cmd_history)
+
     if mode=="":
         while True:
-            cmd=input("Give a command: ")
+            print()
+            print("=" * 70)
+            cmd = input("Command > ")
+
             cmd=cmd.upper().strip()
             cmd_history.append(cmd)
 

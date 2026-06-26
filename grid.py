@@ -24,23 +24,28 @@ class Grid():
 
     def display(self, robot, cmd_history):
 
+        print("=" * 70)
+        print(f"{'ROBOT SIMULATOR':^70}")
+        print("=" * 70)
+        print()
+
         dash = "-" * ((self.max_x + 1) * 2 + 1)
         width = len(str(self.max_y))
 
         status = [
-            "Robot Status",
+            "SYSTEM STATUS",
             "------------",
             f"Position : ({robot.x}, {robot.y})",
-            f"Facing   : {robot.direction.name} {robot.direction.symbol}",
+            f"Facing   : {robot.direction.name:<5} {robot.direction.symbol}",
             f"Obstacles: {len(self.obstacles)}",
             "",
-            "Recent Commands",
+            "RECENT COMMANDS",
             "---------------"
         ]
 
-        # newest command first
-        for cmd in reversed(cmd_history):
-            status.append("> " + cmd)
+        for i, cmd in enumerate(reversed(cmd_history)):
+            prefix = ">" if i == 0 else " "
+            status.append(f"{prefix} {cmd}")
 
         total_rows = self.max_y - self.min_y + 1
 
