@@ -22,33 +22,82 @@ class Grid():
             y=get_coordinate("y= ",self.min_y,self.max_y)
             self.obstacles.add((x,y))
 
-    def display(self,robot):
-        dash="-"*((self.max_x+1)*2 +1)
-        width =len(str(self.max_y))
+    def display(self, robot, cmd_history):
 
-        print(" "*(width+2) + "+" + dash + "+")
+        dash = "-" * ((self.max_x + 1) * 2 + 1)
+        width = len(str(self.max_y))
 
-        for row in range(self.max_y,self.min_y-1,-1):
-            drow=f" {row:{width}} |"
+        status = [
+            "Robot Status",
+            "------------",
+            f"Position : ({robot.x}, {robot.y})",
+            f"Facing   : {robot.direction.name} {robot.direction.symbol}",
+            f"Obstacles: {len(self.obstacles)}",
+            "",
+            "Recent Commands",
+            "---------------"
+        ]
 
-            for column in range(self.min_x,self.max_x+1,1):
-                if (column,row) in self.obstacles:
-                    drow+=" ■"
-                elif column==robot.x and row==robot.y:
-                    drow+=f" {robot.direction.symbol}"
+        # newest command first
+        for cmd in reversed(cmd_history):
+            status.append("> " + cmd)
+
+        total_rows = self.max_y - self.min_y + 1
+
+        while len(status) < total_rows:
+            status.append("")
+
+        print()
+
+        print(
+            " " * (width + 1)
+            + "+"
+            + dash
+            + "+"
+            + "   "
+            + "+"
+            + "-" * 24
+            + "+"
+        )
+
+        for i, row in enumerate(range(self.max_y, self.min_y - 1, -1)):
+
+            grid_row = f"{row:>{width}} |"
+
+            for column in range(self.min_x, self.max_x + 1):
+
+                if (column, row) in self.obstacles:
+                    grid_row += " ■"
+
+                elif column == robot.x and row == robot.y:
+                    grid_row += f" {robot.direction.symbol}"
+
                 else:
-                    drow+=" ."
+                    grid_row += " ."
 
-            drow+=" |"
-            print(drow)
+            grid_row += " |"
 
-        dash="-"*((self.max_x+1)*2 +1)
-        print(" "*(width+2) + "+" + dash + "+")
-        drow="  "
+            status_text = status[i] if i < len(status) else ""
 
-        for column in range(self.min_x,self.max_x+1,1):
-            drow=drow+ f" {column}"
-        print(drow)
+            print(f"{grid_row}   | {status_text:<22}|")
+
+        print(
+            " " * (width + 1)
+            + "+"
+            + dash
+            + "+"
+            + "   "
+            + "+"
+            + "-" * 24
+            + "+"
+        )
+
+        axis = " " * (width + 2)
+
+        for column in range(self.min_x, self.max_x + 1):
+            axis += f" {column}"
+
+        print(axis)  
 
     def load_obstacles(self,file):
         for obs in file:

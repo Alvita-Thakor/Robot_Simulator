@@ -63,13 +63,19 @@ def main():
     robot=Robot(x,y,direction,grid)
     
     mode=input("Give file name for file mode else leave blank: ")
+    cmd_history=[]
     if mode=="":
         while True:
             cmd=input("Give a command: ")
             cmd=cmd.upper().strip()
+            cmd_history.append(cmd)
+
+            if len(cmd_history) > 5:
+                cmd_history.pop(0)
+
             if not command_process(cmd,robot):
                 break
-            grid.display(robot)
+            grid.display(robot,cmd_history)
 
     else:
         while True:
@@ -77,9 +83,15 @@ def main():
                 with open("data/" + mode,"r") as file:
                     for cmd in file:
                         cmd=cmd.upper().strip()
+                        
+                        cmd_history.append(cmd)
+
+                        if len(cmd_history) > 5:
+                            cmd_history.pop(0)
+
                         if not command_process(cmd,robot):
                             break
-                        grid.display(robot)
+                        grid.display(robot,cmd_history)
                     
             except FileNotFoundError:
                 mode=input("please give valid file name: ")
