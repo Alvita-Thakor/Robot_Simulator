@@ -1,4 +1,4 @@
-from utils import get_coordinate
+from utils import get_coordinate,clear_screen
 from grid import Grid
 from robot import Robot
 from direction import Direction
@@ -75,6 +75,7 @@ def main():
 
             if not command_process(cmd,robot):
                 break
+            clear_screen()
             grid.display(robot,cmd_history)
 
     else:
@@ -91,6 +92,7 @@ def main():
 
                         if not command_process(cmd,robot):
                             break
+                        clear_screen()
                         grid.display(robot,cmd_history)
                     
             except FileNotFoundError:
