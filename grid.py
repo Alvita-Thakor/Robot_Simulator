@@ -1,7 +1,7 @@
 from utils import get_coordinate
 
 class Grid():
-    def __init__(self,max_x=10,max_y=10,min_x=0,min_y=0):
+    def __init__(self,max_x=20,max_y=20,min_x=0,min_y=0):
         self.max_x=max_x
         self.max_y=max_y
         self.min_x=min_x
@@ -22,7 +22,7 @@ class Grid():
             y=get_coordinate("y= ",self.min_y,self.max_y)
             self.obstacles.add((x,y))
 
-    def display(self, robot, cmd_history):
+    def display(self, robot, cmd_history,msg):
 
         print("=" * 70)
         print(f"{'ROBOT SIMULATOR':^70}")
@@ -38,6 +38,10 @@ class Grid():
             f"Position : ({robot.x}, {robot.y})",
             f"Facing   : {robot.direction.name:<5} {robot.direction.symbol}",
             f"Obstacles: {len(self.obstacles)}",
+            "",
+            "MESSAGE",
+            "---------------",
+            msg,
             "",
             "RECENT COMMANDS",
             "---------------"

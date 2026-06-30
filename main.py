@@ -4,24 +4,32 @@ from robot import Robot
 from direction import Direction
 
 def command_process(cmd,robot):
-    match(cmd):
-            case "MOVE":
-                robot.move()
-                return True
-            case "LEFT":
-                robot.left()
-                return True
-            case "RIGHT":
-                robot.right()
-                return True
-            case "REPORT":
-                robot.report()
-                return True
-            case "EXIT":
-                return False
-            case _:
-                print(f"Invalid command {cmd}")
-                return True
+    parts=cmd.split()
+    if len(parts)==1:
+        match(parts[0]):
+                case "MOVE":
+                    robot.move()
+                    return True,""
+                case "LEFT":
+                    robot.left()
+                    return True,""
+                case "RIGHT":
+                    robot.right()
+                    return True,""
+                case "REPORT":
+                    robot.report()
+                    return True,""
+                case "EXIT":
+                    return False,""
+                case _:
+                    return True,f"Invalid command {cmd}"
+    
+    elif len(parts)==3:
+        if parts[0]=="GO":
+            msg=robot.go_to(int(parts[1]),int(parts[2]))
+            return True,msg
+        else:
+            return False,"Invalid Command"
 
 def main():
     grid=Grid()
@@ -65,7 +73,7 @@ def main():
     mode=input("Give file name for file mode else leave blank: ")
     cmd_history=[]
     clear_screen()
-    grid.display(robot, cmd_history)
+    grid.display(robot, cmd_history,"Let's get started!")
 
     if mode=="":
         while True:
@@ -79,10 +87,12 @@ def main():
             if len(cmd_history) > 5:
                 cmd_history.pop(0)
 
-            if not command_process(cmd,robot):
+            running,status=command_process(cmd,robot)
+
+            if not running:
                 break
             clear_screen()
-            grid.display(robot,cmd_history)
+            grid.display(robot,cmd_history,status)
 
     else:
         while True:
@@ -96,10 +106,11 @@ def main():
                         if len(cmd_history) > 5:
                             cmd_history.pop(0)
 
-                        if not command_process(cmd,robot):
+                        running,status=command_process(cmd,robot)
+                        if not running:
                             break
                         clear_screen()
-                        grid.display(robot,cmd_history)
+                        grid.display(robot,cmd_history,status)
                     
             except FileNotFoundError:
                 mode=input("please give valid file name: ")
