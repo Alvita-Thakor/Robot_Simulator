@@ -2,6 +2,7 @@ from utils import get_coordinate,clear_screen
 from grid import Grid
 from robot import Robot
 from direction import Direction
+import time
 
 def command_process(cmd,robot):
     parts=cmd.split()
@@ -9,25 +10,27 @@ def command_process(cmd,robot):
         match(parts[0]):
                 case "MOVE":
                     robot.move()
-                    return True,""
+                    return True,None
                 case "LEFT":
                     robot.left()
-                    return True,""
+                    return True,None
                 case "RIGHT":
                     robot.right()
-                    return True,""
+                    return True,None
                 case "REPORT":
                     robot.report()
-                    return True,""
+                    return True,None
                 case "EXIT":
-                    return False,""
+                    robot.status
+                    return False,None
                 case _:
-                    return True,f"Invalid command {cmd}"
+                    robot.status=f"Invalid command {cmd}"
+                    return True,None
     
     elif len(parts)==3:
         if parts[0]=="GO":
-            msg=robot.go_to(int(parts[1]),int(parts[2]))
-            return True,msg
+            animate=robot.go_to(int(parts[1]),int(parts[2]))
+            return True,animate
         else:
             return False,"Invalid Command"
 
@@ -87,12 +90,18 @@ def main():
             if len(cmd_history) > 5:
                 cmd_history.pop(0)
 
-            running,status=command_process(cmd,robot)
+            running,animate=command_process(cmd,robot)
 
             if not running:
                 break
+
+            if animate is not None:
+                for _ in animate:
+                    clear_screen()
+                    grid.display(robot, cmd_history, robot.status)
+                    time.sleep(0.2)
             clear_screen()
-            grid.display(robot,cmd_history,status)
+            grid.display(robot,cmd_history,robot.status)
 
     else:
         while True:
@@ -106,11 +115,17 @@ def main():
                         if len(cmd_history) > 5:
                             cmd_history.pop(0)
 
-                        running,status=command_process(cmd,robot)
+                        running,animate=command_process(cmd,robot)
                         if not running:
                             break
+
+                        if animate is not None:
+                            for _ in animate:
+                                clear_screen()
+                                grid.display(robot, cmd_history, robot.status)
+                                time.sleep(0.2)
                         clear_screen()
-                        grid.display(robot,cmd_history,status)
+                        grid.display(robot,cmd_history,robot.status)
                     
             except FileNotFoundError:
                 mode=input("please give valid file name: ")

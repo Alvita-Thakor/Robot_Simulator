@@ -8,6 +8,7 @@ class Robot():
         self.y=y
         self.direction=direction
         self.grid=grid
+        self.status=""
     
     def move(self):
         new_x= self.x + self.direction.dx
@@ -29,50 +30,17 @@ class Robot():
 
     def go_to(self,x,y):
         if not self.grid.position_valid(x,y):
-            return "Destination invalid"
-        explore=deque()
-        explore.append((self.x,self.y))
-        visited=set()
-        visited.add((self.x,self.y))
-        parent_dict={}
-        ways=[(1,0),(-1,0),(0,1),(0,-1)]
-        while len(explore)!=0:
-            front=explore.popleft()
-            if front==(x,y):
-                break
-            else:
-                for way in ways:
-                    if (self.grid.position_valid(front[0]+way[0],front[1]+way[1])) and (front[0]+way[0],front[1]+way[1]) not in visited:
-                        visited.add((front[0]+way[0],front[1]+way[1]))
-                        explore.append((front[0]+way[0],front[1]+way[1]))
-                        parent_dict[(front[0]+way[0],front[1]+way[1])]=(front[0],front[1])
+            self.status= "Destination invalid"
+            return None
+        
+        parent=self.find_path(x,y)
+        msg,path=self.reconstruct_path(parent,x,y)
+        self.status=msg
 
-        path=[]
-        child=(x,y)
-        path.append(child)
-        if child in parent_dict:
-            while True:
-                if child==(self.x,self.y):
-                    break
-                parent=parent_dict[child]
-                path.append(parent)
-                child=parent
-        else:
-            return "No path valid"
-
-        path.reverse()
-
-        find_direction={(0,1):Direction.NORTH , (1,0):Direction.EAST,(0,-1):Direction.SOUTH,(-1,0):Direction.WEST}
-        for i in range(len(path)-1):
-            current=path[i]
-            nxt=path[i+1]
-            dx=nxt[0] - current[0]
-            dy=nxt[1] - current[1]
-            req_dir=find_direction[(dx,dy)]
-            self.face_direction(req_dir)
-            self.move()
-
-        return "Reached destination"
+        if msg!= "Reached Destination":
+            return None
+        
+        return self.follow_path(path)
 
     def face_direction(self, req_dir):
 
@@ -95,3 +63,48 @@ class Robot():
         else:
             for _ in range(anticlockwise):
                 self.left()
+
+    def find_path(self,x,y):
+        explore=deque()
+        explore.append((self.x,self.y))
+        visited=set()
+        visited.add((self.x,self.y))
+        parent_dict={}
+        ways=[(1,0),(-1,0),(0,1),(0,-1)]
+        while len(explore)!=0:
+            front=explore.popleft()
+            if front==(x,y):
+                return parent_dict
+            else:
+                for way in ways:
+                    if (self.grid.position_valid(front[0]+way[0],front[1]+way[1])) and (front[0]+way[0],front[1]+way[1]) not in visited:
+                        visited.add((front[0]+way[0],front[1]+way[1]))
+                        explore.append((front[0]+way[0],front[1]+way[1]))
+                        parent_dict[(front[0]+way[0],front[1]+way[1])]=(front[0],front[1])
+
+    def reconstruct_path(self,parent_dict,x,y):
+        path=[]
+        child=(x,y)
+        path.append(child)
+        if child in parent_dict:
+            while True:
+                if child==(self.x,self.y):
+                    path.reverse()
+                    return "Reached Destination",path
+                parent=parent_dict[child]
+                path.append(parent)
+                child=parent
+        else:
+            return "No path valid",path
+
+    def follow_path(self,path):
+        find_direction={(0,1):Direction.NORTH , (1,0):Direction.EAST,(0,-1):Direction.SOUTH,(-1,0):Direction.WEST}
+        for i in range(len(path)-1):
+            current=path[i]
+            nxt=path[i+1]
+            dx=nxt[0] - current[0]
+            dy=nxt[1] - current[1]
+            req_dir=find_direction[(dx,dy)]
+            self.face_direction(req_dir)
+            self.move()
+            yield
