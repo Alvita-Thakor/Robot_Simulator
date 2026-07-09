@@ -21,18 +21,20 @@ def command_process(cmd,robot):
                     robot.report()
                     return True,None
                 case "EXIT":
-                    robot.status
                     return False,None
                 case _:
                     robot.status=f"Invalid command {cmd}"
                     return True,None
     
     elif len(parts)==3:
-        if parts[0]=="GO":
-            animate=robot.go_to(int(parts[1]),int(parts[2]))
+        if parts[0] in ["BFS","A_STAR"]:
+            animate=robot.go_to(int(parts[1]),int(parts[2]),parts[0])
             return True,animate
         else:
-            return False,"Invalid Command"
+            return True,"Invalid Command"
+        
+    else:
+        return True,"Invalid Command"
 
 def main():
     grid=Grid()
@@ -91,7 +93,6 @@ def main():
                 cmd_history.pop(0)
 
             running,animate=command_process(cmd,robot)
-
             if not running:
                 break
 
