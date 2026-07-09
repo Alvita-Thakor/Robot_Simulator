@@ -31,10 +31,12 @@ def command_process(cmd,robot):
             animate=robot.go_to(int(parts[1]),int(parts[2]),parts[0])
             return True,animate
         else:
-            return True,"Invalid Command"
+            robot.status=f"Invalid command {cmd}"
+            return True,None
         
     else:
-        return True,"Invalid Command"
+        robot.status=f"Invalid command {cmd}"
+        return True,None
 
 def main():
     grid=Grid()
