@@ -28,8 +28,12 @@ def command_process(cmd,robot):
     
     elif len(parts)==3:
         if parts[0] in ["BFS","A_STAR"]:
-            animate=robot.go_to(int(parts[1]),int(parts[2]),parts[0])
-            return True,animate
+            try:
+                animate=robot.go_to(int(parts[1]),int(parts[2]),parts[0])
+                return True,animate
+            except ValueError:
+                robot.status="Coordinates must be numbers"
+                return True,None
         else:
             robot.status=f"Invalid command {cmd}"
             return True,None
