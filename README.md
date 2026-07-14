@@ -8,16 +8,15 @@ The project was built to strengthen software engineering fundamentals through a 
 
 ## ✨ Features
 
-- Interactive command-line interface
-- 2D grid-based robot simulation
-- Manual robot movement and rotation
-- Obstacle placement and collision avoidance
+- Interactive **Pygame graphical interface**
+- 2D grid-based robot simulation with visual rendering
+- Click-to-place obstacles
+- Keyboard-based robot movement and rotation
+- Click-to-select destination for pathfinding
 - Boundary validation
 - **Breadth-First Search (BFS)** shortest-path planning
 - **A\*** heuristic path planning using Manhattan Distance
 - Animated path execution
-- Command history and status updates
-- Interactive mode and command-file execution
 - Modular object-oriented architecture
 - Input validation and error handling
 
@@ -45,27 +44,34 @@ The project was built to strengthen software engineering fundamentals through a 
 Robot_Simulator/
 │
 ├── main.py          # Program entry point
+├── pygame_ui.py      # Pygame window, rendering, and input handling
 ├── robot.py         # Robot logic and navigation
 ├── grid.py          # Grid representation and obstacle handling
+├── direction.py      # Direction enum
 ├── utils.py         # Helper functions
-├── data/            # Command and obstacle files
+├── data/            # Obstacle files
 ├── README.md
 └── .gitignore
 ```
 
 ---
 
-## 🎮 Supported Commands
+## 🎮 Controls
 
-| Command | Description |
+**Obstacle placement window**
+| Input | Action |
 |----------|-------------|
-| `MOVE` | Move the robot one step forward |
-| `LEFT` | Rotate the robot 90° left |
-| `RIGHT` | Rotate the robot 90° right |
-| `REPORT` | Display the robot's current position and direction |
-| `BFS X Y` | Navigate to `(X, Y)` using **BFS** |
-| `A_STAR X Y` | Navigate to `(X, Y)` using **A\*** |
-| `EXIT` | Exit the simulator |
+| Click a cell | Toggle obstacle on/off |
+| `ENTER` | Confirm and continue |
+
+**Simulator window**
+| Input | Action |
+|----------|-------------|
+| `↑` / `↓` | Move the robot forward |
+| `←` / `→` | Rotate the robot left / right |
+| Click a cell | Set destination |
+| `B` | Navigate to destination using **BFS** |
+| `N` | Navigate to destination using **A\*** |
 
 ---
 
@@ -91,27 +97,13 @@ python main.py
 
 ---
 
-## 💻 Example Session
+## 💻 How It Works
 
-```text
-> GO 5 4
-
-Finding shortest path using BFS...
-
-Robot moving...
-
-Destination reached.
-```
-
-```text
-> ASTAR 2 1
-
-Finding shortest path using A*...
-
-Robot moving...
-
-Destination reached.
-```
+1. Run `main.py`. You'll be asked whether to load obstacles from a file or place them manually.
+2. If placing manually, a window opens — click cells to toggle obstacles, then press `ENTER`.
+3. Enter the robot's starting position and facing direction in the terminal.
+4. The main simulator window opens with the robot on the grid.
+5. Move the robot with the arrow keys, or click a cell to set a destination and press `B` (BFS) or `N` (A*) to watch the robot path there automatically.
 
 ---
 
@@ -147,7 +139,6 @@ Destination reached.
 ## 🔮 Future Improvements
 
 - ROS2 integration
-- Graphical visualization using Pygame or Tkinter
 - Dynamic obstacle handling
 - Multiple robot support
 - Weighted grids and Dijkstra's algorithm
